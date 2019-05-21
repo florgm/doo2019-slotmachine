@@ -2,7 +2,6 @@ package slotmachine.gamemode.random;
 
 import slotmachine.gamemode.GameMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Random extends GameMode {
