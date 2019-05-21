@@ -10,6 +10,7 @@ public class SequenceFactory implements GameModeAbstractFactory {
     private List<Integer> reelSize;
     private List<List<Integer>> sequence;
     private int index;
+    private int cantidad;
 
     public SequenceFactory (List<Integer> reelSize, int cantidad) {
         this.reelSize = reelSize;
