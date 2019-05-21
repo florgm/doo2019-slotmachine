@@ -20,8 +20,6 @@ public class Sequence extends GameMode {
                 sequence.add(getRandoms(reelSize));
             }
         }
-
-
     }
 
     @Override
