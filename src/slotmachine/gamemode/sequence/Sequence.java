@@ -16,9 +16,7 @@ public class Sequence extends GameMode {
         index = 0;
 
         for(int i = 0; i  < quantity; i++) {
-            for(int j : reelSize) {
-                sequence.add(getRandoms(reelSize));
-            }
+            sequence.add(getRandoms(reelSize));
         }
     }
 
