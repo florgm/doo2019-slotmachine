@@ -1,6 +1,7 @@
 package slotmachine.gamemode.sequence;
 
 import slotmachine.gamemode.GameMode;
+import slotmachine.gamemode.randomize.IRandomize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +11,13 @@ public class Sequence extends GameMode {
     private List<List<Integer>> sequence;
     private int index;
 
-    public Sequence (List<Integer> reelSize, int quantity) {
+    public Sequence (List<Integer> reelSize, int quantity, IRandomize rand) {
+        super(rand);
         this.reelSize = reelSize;
         sequence = new ArrayList<List<Integer>>();
         index = 0;
 
-        for(int i = 0; i  < quantity; i++) {
+        for(int i = 0; i < quantity; i++) {
             sequence.add(getRandoms(reelSize));
         }
     }
