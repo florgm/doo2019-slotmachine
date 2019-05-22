@@ -10,12 +10,12 @@ public class Sequence extends GameMode {
     private List<List<Integer>> sequence;
     private int index;
 
-    public Sequence (List<Integer> reelSize, int cantidad) {
+    public Sequence (List<Integer> reelSize, int quantity) {
         this.reelSize = reelSize;
         sequence = new ArrayList<List<Integer>>();
         index = 0;
 
-        for(int i = 0; i  < cantidad; i++) {
+        for(int i = 0; i  < quantity; i++) {
             for(int j : reelSize) {
                 sequence.add(getRandoms(reelSize));
             }
