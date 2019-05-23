@@ -14,10 +14,6 @@ public abstract class GameMode {
 
     public abstract List<Integer> getNextValues();
 
-    public void setRandomize(IRandomize rand) {
-        this.randomize = rand;
-    }
-
     protected List<Integer> getRandoms(List<Integer> reelSize) {
         List<Integer> result = new ArrayList<>();
 
