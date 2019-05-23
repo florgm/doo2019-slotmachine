@@ -1,6 +1,5 @@
 package slotmachine.gamemode.random;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import slotmachine.gamemode.GameMode;
 import slotmachine.gamemode.GameModeFactory;

@@ -3,7 +3,6 @@ package slotmachine.gamemode.sequence;
 import org.junit.jupiter.api.Test;
 import slotmachine.gamemode.GameMode;
 import slotmachine.gamemode.GameModeFactory;
-import slotmachine.gamemode.random.RandomFactory;
 import slotmachine.gamemode.randomize.IRandomize;
 import slotmachine.gamemode.randomize.RandomizeMock;
 
