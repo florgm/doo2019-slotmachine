@@ -1,9 +1,13 @@
 package slotmachine.recordrelated;
 
+import java.util.List;
+
 public class RecordManager{
 
-    public Record record;
+    private List<Record> records;
+    private String result;
 
-    public getRecord() { return record;}
-    private addRecord();
+    public void setRecord(String result) { this.result = result; }
+    public List<Record>getRecord()  { return records; }
+    private void addRecord() { records.add( new Record(String));}
 }
