@@ -1,6 +1,6 @@
 package slotmachine.reelrelated;
 
-public interface IReelManager {
-    void spinReel();
+public interface IReel {
+    void spinReel(int play);
     void returnPlay();
 }
