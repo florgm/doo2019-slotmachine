@@ -6,7 +6,7 @@ public class Reel implements IReel {
     private List<Integer> symbols;
 
     @Override
-    public void spinReel(int play) {
+    public void spinReel(Object play) {
 
     }
 
