@@ -1,19 +1,25 @@
 package slotmachine.gamemode;
 
+import slotmachine.gamemode.randomize.IRandomize;
+
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.List;
 
 public abstract class GameMode {
+    private IRandomize randomize;
+
+    public GameMode(IRandomize randomize) {
+        this.randomize = randomize;
+    }
+
     public abstract List<Integer> getNextValues();
 
     protected List<Integer> getRandoms(List<Integer> reelSize) {
         List<Integer> result = new ArrayList<>();
-        Random random = new Random();
 
 
         for(int i : reelSize) {
-            result.add(random.nextInt()%i);
+            result.add(Math.abs(randomize.nextInt()%i));
         }
 
 
