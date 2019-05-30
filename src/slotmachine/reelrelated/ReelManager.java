@@ -1,30 +1,32 @@
 package slotmachine.reelrelated;
 
+import slotmachine.settings.Settings;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReelManager implements IReel {
     private List<IReel> reels = new ArrayList<>();
-    private int indice;
+    private Settings settings;
 
-    public ReelManager(int reelQuantity) {
-        indice = 0;
+    public ReelManager( ) {
+        settings = Settings.getInstance();
+        /*index = 0;
         for(int i = 0; i < reelQuantity; i++) {
             reels.add(new Reel());
-            indice++;
-        }
+            index++;
+        }*/
     }
 
-    public void add( ) {
+    public void setReels(int reelQuantity) {
+        String[] reelSymbols = settings.getProperties().getProperty("symbols").split(",");
 
-            this.reels.add(new Reel());
-            indice++;
+        //Aca va un metodo que asigna a cada reel su lista de simbolos segun la cantidad de reels que sean
+        //Y tiene que haber una funcion que me devuelva cuantos simbolos tiene cada reel
+        int remainder = 52 % reelQuantity;
+        int symbolsQuantity = (52 - remainder) / reelQuantity;
 
-    }
 
-    public void remove( ) {
-            reels.remove(indice);
-            indice--;
 
     }
 

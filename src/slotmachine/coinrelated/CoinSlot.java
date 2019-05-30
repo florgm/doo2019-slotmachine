@@ -1,10 +1,7 @@
 package slotmachine.coinrelated;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CoinSlot {
-    private List<Coin> coins;
+    private int coins;
 
     public CoinSlot( ) {
         resetCoinSlot();
@@ -12,17 +9,18 @@ public class CoinSlot {
 
     //Esto va a ser el doAction de algun boton de la interfaz
     public void insertCoin() {
-        coins.add(new Coin());
+        coins++;
     }
 
     //Este metodo lo pide slot machine cuando aprietan play
-    public List<Coin> getCoins() {
+    public int getCoins() {
         return coins;
     }
 
+
     //Este metodo se llama desde slotmachine
     public void resetCoinSlot() {
-        coins = new ArrayList<>();
+        coins = 0;
     }
 
 }

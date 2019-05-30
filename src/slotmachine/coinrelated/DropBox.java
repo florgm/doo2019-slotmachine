@@ -1,27 +1,22 @@
 package slotmachine.coinrelated;
 
-import java.util.Collection;
-import java.util.List;
-
 public class DropBox {
-    private List<Coin> coinPool;
-    private Integer bet;
-    private Integer multiplier;
+    private int coinPool;
+    private int bet;
+    private int multiplier;
 
-    public DropBox(List<Coin> coinPool) {
+    public void setCoinPool(int coinPool) {
         this.coinPool = coinPool;
-        this.bet = 0;
-        this.multiplier = 5;
     }
 
     //A esta funcion la llama slotmachine y le pasa las monedas ingresadas en coinslot
-    public void setBet(List<Coin> bet) {
-        this.bet = bet.size();
-        coinPool.addAll(bet);
+    public void setBet(int bet) {
+        this.bet = bet;
+        coinPool += bet;
     }
 
-    public List<Coin> withdrawCoins() {
-        return coinPool.subList(0,bet*multiplier-1);
+    public void withdrawCoins(int prize) {
+        coinPool = coinPool - prize;
     }
 
 }
