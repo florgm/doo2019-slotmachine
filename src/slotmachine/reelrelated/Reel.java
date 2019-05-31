@@ -1,12 +1,13 @@
 package slotmachine.reelrelated;
 
-import slotmachine.settings.Settings;
-
 import java.util.List;
 
 public class Reel implements IReel {
-    private List<Integer> symbols;
-    private Settings reelSetting;
+    private List<String> symbols;
+
+    public Reel(List<String> symbols) {
+        this.symbols = symbols;
+    }
 
     @Override
     public void spinReel(Object play) {

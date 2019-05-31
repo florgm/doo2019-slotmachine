@@ -11,28 +11,45 @@ public class ReelManager implements IReel {
 
     public ReelManager( ) {
         settings = Settings.getInstance();
-        /*index = 0;
-        for(int i = 0; i < reelQuantity; i++) {
-            reels.add(new Reel());
-            index++;
-        }*/
     }
 
-    public void setReels(int reelQuantity) {
+    public List<Integer> setReels(int reelQuantity) {
         String[] reelSymbols = settings.getProperties().getProperty("symbols").split(",");
+        List<Integer> reelSize = new ArrayList<>();
 
-        //Aca va un metodo que asigna a cada reel su lista de simbolos segun la cantidad de reels que sean
-        //Y tiene que haber una funcion que me devuelva cuantos simbolos tiene cada reel
         int remainder = 52 % reelQuantity;
         int symbolsQuantity = (52 - remainder) / reelQuantity;
 
+        for(int j = 0; j < reelQuantity; j++) {
+            List<String> symbols = new ArrayList<>();
+            int start = symbolsQuantity*j;
+            int end;
 
+            if(j == reelQuantity-1) {
+                end = 52;
+            }
+            else {
+                end = start + symbolsQuantity;
+            }
 
+            for(int k = start; k < end; k++) {
+                symbols.add(reelSymbols[k]);
+            }
+
+            reelSize.add(end-start);
+            reels.add(new Reel(symbols));
+        }
+
+        return reelSize;
     }
 
+    public List<IReel> getReels() {
+        return reels;
+    }
 
     @Override
     public void spinReel(Object play) {
+        //Agregar try catch
         List<Integer> results = (List<Integer>) play;
 
         for(int i = 0; i < reels.size() && i < results.size(); i++) {

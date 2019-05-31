@@ -21,8 +21,9 @@ public class SlotMachine {
     private DropBox dropBox;
     private PayoutTray payoutTray;
     private ReelManager reelManager;
-    private GameMode gamePlayGenerator;
     private IRandomize randomize;
+    private GameMode random;
+    private GameMode sequence;
 
     private SlotMachine() { }
 
@@ -52,19 +53,24 @@ public class SlotMachine {
         dropBox.setCoinPool(coinPool);
 
         int reelQuantity = Integer.valueOf(settings.getProperties().getProperty("reelQuantity"));
-        reelManager.setReels(reelQuantity);
-
-        //Primero cargo los reels, paso esa cantidad una funcion y esa funcion va a un list de enteros que se los paso a gamemode
-        List<Integer> reelSize;
+        List<Integer> reelSize = reelManager.setReels(reelQuantity);
 
         String gameMode = settings.getProperties().getProperty("gameMode");
+        int sequenceQuantity = Integer.valueOf(settings.getProperties().getProperty("sequenceQ"));
 
-        if (gameMode.equals("Random")) {
-            //GameMode random = GameModeFactory.getGameMode(new RandomFactory(reelSize, randomize));
+        System.out.println(gameMode);
+
+        if (gameMode.equals("random")) {
+            random = GameModeFactory.getGameMode(new RandomFactory(reelSize, randomize));
         }
         else {
-            //GameMode sequence = GameModeFactory.getGameMode(new SequenceFactory(reelSize,10, randomize));
+            sequence = GameModeFactory.getGameMode(new SequenceFactory(reelSize,sequenceQuantity, randomize));
         }
+
+    }
+
+    public void getResult() {
+        System.out.println(random.getNextValues());
     }
 
 }
