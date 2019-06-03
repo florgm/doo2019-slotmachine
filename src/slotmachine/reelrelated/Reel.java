@@ -9,13 +9,17 @@ public class Reel implements IReel {
         this.symbols = symbols;
     }
 
-    @Override
-    public void spinReel(Object play) {
-
+    public List<String> getSymbols() {
+        return symbols;
     }
 
     @Override
-    public void returnPlay() {
+    public void spinReel(Object play) {
+        //TODO ver metodo de spin
+    }
+
+    @Override
+    public void spinFinished() {
 
     }
 }

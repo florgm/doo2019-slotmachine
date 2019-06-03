@@ -21,7 +21,7 @@ public class Settings {
                 //Setear por default
                 properties.setProperty("coinPool","300");
                 properties.setProperty("gameMode","random");
-                properties.setProperty("reelQuantity","3");
+                properties.setProperty("reelQuantity","5");
                 properties.setProperty("sequenceQ", "10");
 
                 //clubs es trebol y spades es pica

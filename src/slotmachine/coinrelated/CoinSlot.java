@@ -17,7 +17,6 @@ public class CoinSlot {
         return coins;
     }
 
-
     //Este metodo se llama desde slotmachine
     public void resetCoinSlot() {
         coins = 0;

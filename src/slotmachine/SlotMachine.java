@@ -9,6 +9,7 @@ import slotmachine.gamemode.random.RandomFactory;
 import slotmachine.gamemode.randomize.IRandomize;
 import slotmachine.gamemode.randomize.Randomize;
 import slotmachine.gamemode.sequence.SequenceFactory;
+import slotmachine.playresult.PlayResult;
 import slotmachine.reelrelated.ReelManager;
 import slotmachine.settings.Settings;
 
@@ -24,6 +25,9 @@ public class SlotMachine {
     private IRandomize randomize;
     private GameMode random;
     private GameMode sequence;
+    private PlayResult playResult;
+
+    public List<Integer> reelSize;
 
     private SlotMachine() { }
 
@@ -42,6 +46,7 @@ public class SlotMachine {
         dropBox = new DropBox();
         reelManager = new ReelManager();
         randomize = new Randomize();
+        playResult = new PlayResult();
 
 
         //Aca faltaria iniciar recordManager
@@ -53,12 +58,10 @@ public class SlotMachine {
         dropBox.setCoinPool(coinPool);
 
         int reelQuantity = Integer.valueOf(settings.getProperties().getProperty("reelQuantity"));
-        List<Integer> reelSize = reelManager.setReels(reelQuantity);
+        reelSize = reelManager.setReels(reelQuantity);
 
         String gameMode = settings.getProperties().getProperty("gameMode");
         int sequenceQuantity = Integer.valueOf(settings.getProperties().getProperty("sequenceQ"));
-
-        System.out.println(gameMode);
 
         if (gameMode.equals("random")) {
             random = GameModeFactory.getGameMode(new RandomFactory(reelSize, randomize));
@@ -69,8 +72,33 @@ public class SlotMachine {
 
     }
 
-    public void getResult() {
+/*    public void getResult() {
         System.out.println(random.getNextValues());
+    }
+
+    public void reels() {
+        for(int i = 0; i < reelSize.size(); i++) {
+            System.out.println("Reel " + i + ": " + reelSize.get(i));
+        }
+    }*/
+
+    public void prueba() {
+        playResult.setReelsResults(random.getNextValues());
+        playResult.setReels(reelManager.getReels());
+        playResult.readReels();
+    }
+
+    public void play() {
+        int coins = coinSlot.getCoins();
+
+        if(coins > 0) {
+            dropBox.setBet(coins);
+
+
+
+        } else {
+          System.out.println("No hay monedas ingresadas para jugar");
+        }
     }
 
 }

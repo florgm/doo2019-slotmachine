@@ -47,18 +47,26 @@ public class ReelManager implements IReel {
         return reels;
     }
 
-    @Override
-    public void spinReel(Object play) {
-        //Agregar try catch
-        List<Integer> results = (List<Integer>) play;
 
-        for(int i = 0; i < reels.size() && i < results.size(); i++) {
-            reels.get(i).spinReel(results.get(i));
+    //TODO ver la excepcion porque la funcion generica no puede hacer throws
+    @Override
+    public void spinReel(Object play){
+        try {
+            List<Integer> results = (List<Integer>) play;
+
+            for(int i = 0; i < reels.size() && i < results.size(); i++) {
+                reels.get(i).spinReel(results.get(i));
+            }
+        } catch (ClassCastException exc) {
+            System.out.println("El elemento debe ser una lista de enteros");
         }
+
     }
 
+
+    //TODO ver como le comunica ReelManager a SlotMachine que los reels dejaron de girar
     @Override
-    public void returnPlay() {
+    public void spinFinished() {
 
     }
 }
