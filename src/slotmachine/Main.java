@@ -10,9 +10,11 @@ public class Main {
         slotMachine.loadConfiguration();
 
         slotMachine.getResult();
+        //slotMachine.guardarRecord();
 //        slotMachine.reels();
 //
-//        slotMachine.prueba();
+        slotMachine.prueba();
+
 //
 //        slotMachine.play();
     }

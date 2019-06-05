@@ -51,7 +51,6 @@ public class ReelManager implements IReelListener {
     }
 
     public List<Reel> getReels() {
-
         return reels;
     }
 

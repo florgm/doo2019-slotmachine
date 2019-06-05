@@ -25,22 +25,23 @@ public class Settings {
                 properties.setProperty("sequenceQ", "10");
 
                 //clubs es trebol y spades es pica
-                properties.setProperty("symbols","AD,AH,AC,AS,"+
-                                                 "2D,2H,2C,2S," +
-                                                 "3D,3H,3C,3S," +
-                                                 "4D,4H,4C,4S," +
-                                                 "5D,5H,5C,5S," +
-                                                 "6D,6H,6C,6S," +
-                                                 "7D,7H,7C,7S," +
-                                                 "8D,8H,8C,8S," +
-                                                 "9D,9H,9C,9S," +
-                                                 "10D,10H,10C,10S," +
-                                                 "JD,JH,JC,JS," +
-                                                 "QD,QH,QC,QS," +
-                                                 "KD,KH,KC,KS");
+                properties.setProperty("symbols","DA,HA,CA,SA,"+
+                                                 "D2,H2,C2,S2," +
+                                                 "D3,H3,C3,S3," +
+                                                 "D4,H4,C4,S4," +
+                                                 "D5,H5,C5,S5," +
+                                                 "D6,H6,C6,S6," +
+                                                 "D7,H7,C7,S7," +
+                                                 "D8,H8,C8,S8," +
+                                                 "D9,H9,C9,S9," +
+                                                 "D10,H10,C10,S10," +
+                                                 "DJ,HJ,CJ,SJ," +
+                                                 "DQ,HQ,CQ,SQ," +
+                                                 "DK,HK,CK,SK");
 
             } finally {
                 instance.setProperties(properties);
+                instance.saveSettings();
             }
         }
         return instance;
@@ -63,7 +64,7 @@ public class Settings {
 
     public void saveSettings() {
         try {
-            OutputStream output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "config.properties");
+            OutputStream output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "settings.properties");
             properties.store(output,null);
         }
         catch (FileNotFoundException e){

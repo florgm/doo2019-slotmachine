@@ -4,7 +4,6 @@ import slotmachine.coinrelated.CoinSlot;
 import slotmachine.coinrelated.DropBox;
 import slotmachine.coinrelated.PayoutTray;
 import slotmachine.gamemode.GameContext;
-import slotmachine.gamemode.GameMode;
 import slotmachine.gamemode.GameModeFactory;
 import slotmachine.gamemode.Mode;
 import slotmachine.gamemode.random.RandomFactory;
@@ -12,6 +11,7 @@ import slotmachine.gamemode.randomize.IRandomize;
 import slotmachine.gamemode.randomize.Randomize;
 import slotmachine.gamemode.sequence.SequenceFactory;
 import slotmachine.playresult.PlayResult;
+import slotmachine.recordrelated.RecordManager;
 import slotmachine.reelrelated.IReelManagerListener;
 import slotmachine.reelrelated.ReelManager;
 import slotmachine.settings.Settings;
@@ -28,8 +28,10 @@ public class SlotMachine implements IReelManagerListener {
     private IRandomize randomize;
     private GameContext gameContext;
     private PlayResult playResult;
+    private RecordManager recordManager;
 
     public List<Integer> reelSize;
+    public List<Integer> results;
 
     private SlotMachine() { }
 
@@ -45,16 +47,12 @@ public class SlotMachine implements IReelManagerListener {
         settings = Settings.getInstance();
 
         gameContext = new GameContext();
-
         coinSlot = new CoinSlot();
         dropBox = new DropBox();
         reelManager = new ReelManager(this);
         randomize = new Randomize();
         playResult = new PlayResult();
-
-
-        //Aca faltaria iniciar recordManager
-
+        recordManager = new RecordManager();
     }
 
     public void loadConfiguration() {
@@ -85,7 +83,8 @@ public class SlotMachine implements IReelManagerListener {
     }
 
     public void getResult() {
-        System.out.println(gameContext.getNextValues());
+        results = gameContext.getNextValues();
+        System.out.println(results);
     }
 
     public void reels() {
@@ -95,10 +94,17 @@ public class SlotMachine implements IReelManagerListener {
 
     }
 
+    public void guardarRecord() {
+        recordManager.setRecord(5);
+        recordManager.setRecord(6);
+        recordManager.getRecords();
+    }
+
     public void prueba() {
-        playResult.setReelsResults(gameContext.getNextValues());
+        playResult.setReelsResults(results);
         playResult.setReels(reelManager.getReels());
         playResult.readReels();
+        playResult.getResult();
     }
 
     public void play() {
