@@ -55,18 +55,11 @@ public class ReelManager implements IReelListener {
         return reels;
     }
 
-
     public void spinReels(){
         spinningReels.addAll(reels);
         reels.forEach(reel -> reel.spinReel());
     }
 
-
-    //TODO ver como le comunica ReelManager a SlotMachine que los reels dejaron de girar
-
-    public void spinFinished() {
-
-    }
 
     @Override
     public void spinFinished(Reel r) {

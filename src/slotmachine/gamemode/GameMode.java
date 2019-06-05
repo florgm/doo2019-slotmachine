@@ -5,7 +5,7 @@ import slotmachine.gamemode.randomize.IRandomize;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GameMode {
+public abstract class GameMode implements Mode{
     private IRandomize randomize;
 
     public GameMode(IRandomize randomize) {

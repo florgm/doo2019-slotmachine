@@ -1,19 +1,18 @@
 package slotmachine.gamemode.sequence;
 
 import slotmachine.gamemode.GameMode;
+import slotmachine.gamemode.Mode;
 import slotmachine.gamemode.randomize.IRandomize;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sequence extends GameMode {
-    private List<Integer> reelSize;
+public class Sequence extends GameMode implements Mode {
     private List<List<Integer>> sequence;
     private int index;
 
     public Sequence (List<Integer> reelSize, int quantity, IRandomize rand) {
         super(rand);
-        this.reelSize = reelSize;
         sequence = new ArrayList<List<Integer>>();
         index = 0;
 
