@@ -2,16 +2,21 @@ package slotmachine.reelrelated;
 
 import java.util.List;
 
-public class Reel implements IReel {
-    private List<Integer> symbols;
+public class Reel {
+    private List<String> symbols;
+    private IReelListener reelListener;
 
-    @Override
-    public void spinReel(Object play) {
-
+    public Reel(List<String> symbols, IReelListener rl) {
+        this.symbols = symbols;
+        this.reelListener = rl;
     }
 
-    @Override
-    public void returnPlay() {
+    public List<String> getSymbols() {
+        return symbols;
+    }
 
+    public void spinReel() {
+        //TODO antes tiene que girar y despues llamar al metodo
+        reelListener.spinFinished(this);
     }
 }
