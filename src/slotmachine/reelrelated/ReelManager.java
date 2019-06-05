@@ -3,18 +3,25 @@ package slotmachine.reelrelated;
 import slotmachine.settings.Settings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class ReelManager implements IReel {
-    private List<IReel> reels = new ArrayList<>();
+public class ReelManager implements IReelListener {
+    private List<Reel> reels = new ArrayList<>();
+    private List<Reel> spinningReels;
     private Settings settings;
+    private IReelManagerListener reelManagerListener;
 
-    public ReelManager( ) {
+    public ReelManager(IReelManagerListener reelManagerListener) {
         settings = Settings.getInstance();
+        this.reelManagerListener = reelManagerListener;
+        spinningReels = new ArrayList<>();
     }
 
     public List<Integer> setReels(int reelQuantity) {
-        String[] reelSymbols = settings.getProperties().getProperty("symbols").split(",");
+        List<String> reelSymbols = Arrays.asList(settings.getProperties().getProperty("symbols").split(","));
+        Collections.shuffle(reelSymbols);
         List<Integer> reelSize = new ArrayList<>();
 
         int remainder = 52 % reelQuantity;
@@ -33,40 +40,40 @@ public class ReelManager implements IReel {
             }
 
             for(int k = start; k < end; k++) {
-                symbols.add(reelSymbols[k]);
+                symbols.add(reelSymbols.get(k));
             }
 
             reelSize.add(end-start);
-            reels.add(new Reel(symbols));
+            reels.add(new Reel(symbols, this));
         }
 
         return reelSize;
     }
 
-    public List<IReel> getReels() {
+    public List<Reel> getReels() {
+
         return reels;
     }
 
 
-    //TODO ver la excepcion porque la funcion generica no puede hacer throws
-    @Override
-    public void spinReel(Object play){
-        try {
-            List<Integer> results = (List<Integer>) play;
-
-            for(int i = 0; i < reels.size() && i < results.size(); i++) {
-                reels.get(i).spinReel(results.get(i));
-            }
-        } catch (ClassCastException exc) {
-            System.out.println("El elemento debe ser una lista de enteros");
-        }
-
+    public void spinReels(){
+        spinningReels.addAll(reels);
+        reels.forEach(reel -> reel.spinReel());
     }
 
 
     //TODO ver como le comunica ReelManager a SlotMachine que los reels dejaron de girar
-    @Override
+
     public void spinFinished() {
 
+    }
+
+    @Override
+    public void spinFinished(Reel r) {
+        spinningReels.remove(r);
+
+        if(spinningReels.size() == 0) {
+            reelManagerListener.onReelsFinished();
+        }
     }
 }

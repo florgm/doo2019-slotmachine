@@ -9,9 +9,11 @@ public class Main {
         slotMachine.initComponents();
         slotMachine.loadConfiguration();
 
-        //slotMachine.getResult();
-        //slotMachine.reels();
+//        slotMachine.getResult();
+        slotMachine.reels();
 
         slotMachine.prueba();
+
+        slotMachine.play();
     }
 }

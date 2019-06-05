@@ -10,12 +10,13 @@ import slotmachine.gamemode.randomize.IRandomize;
 import slotmachine.gamemode.randomize.Randomize;
 import slotmachine.gamemode.sequence.SequenceFactory;
 import slotmachine.playresult.PlayResult;
+import slotmachine.reelrelated.IReelManagerListener;
 import slotmachine.reelrelated.ReelManager;
 import slotmachine.settings.Settings;
 
 import java.util.List;
 
-public class SlotMachine {
+public class SlotMachine implements IReelManagerListener {
     private static SlotMachine instance;
     private Settings settings;
     private CoinSlot coinSlot;
@@ -44,7 +45,7 @@ public class SlotMachine {
 
         coinSlot = new CoinSlot();
         dropBox = new DropBox();
-        reelManager = new ReelManager();
+        reelManager = new ReelManager(this);
         randomize = new Randomize();
         playResult = new PlayResult();
 
@@ -72,7 +73,12 @@ public class SlotMachine {
 
     }
 
-/*    public void getResult() {
+    public void onReelsFinished() {
+        //TODO este metodo se llama cuando todos los reels terminan de girar
+        System.out.println("Todos los reels terminaron");
+    }
+
+    public void getResult() {
         System.out.println(random.getNextValues());
     }
 
@@ -80,7 +86,8 @@ public class SlotMachine {
         for(int i = 0; i < reelSize.size(); i++) {
             System.out.println("Reel " + i + ": " + reelSize.get(i));
         }
-    }*/
+
+    }
 
     public void prueba() {
         playResult.setReelsResults(random.getNextValues());
@@ -89,16 +96,17 @@ public class SlotMachine {
     }
 
     public void play() {
-        int coins = coinSlot.getCoins();
-
-        if(coins > 0) {
-            dropBox.setBet(coins);
-
-
-
-        } else {
-          System.out.println("No hay monedas ingresadas para jugar");
-        }
+//        int coins = coinSlot.getCoins();
+//
+//        if(coins > 0) {
+//            dropBox.setBet(coins);
+//
+//
+//
+//        } else {
+//          System.out.println("No hay monedas ingresadas para jugar");
+//        }
+        reelManager.spinReels();
     }
 
 }
