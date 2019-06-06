@@ -1,6 +1,7 @@
 package slotmachine;
 
 import slotmachine.playresult.PokerPlayResult;
+import slotmachine.reelrelated.ReelManagerPokerStyle;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class Main {
         }
 
 
-        slotMachine.initComponents(new PokerPlayResult(),5, properties.getProperty("symbols"));
+        slotMachine.initComponents(new PokerPlayResult(), new ReelManagerPokerStyle(), 5, properties.getProperty("symbols"));
         slotMachine.loadConfiguration();
 
         slotMachine.getResult();

@@ -12,8 +12,8 @@ import slotmachine.gamemode.randomize.Randomize;
 import slotmachine.gamemode.sequence.SequenceFactory;
 import slotmachine.playresult.IPlayResult;
 import slotmachine.recordrelated.RecordManager;
+import slotmachine.reelrelated.IReelManager;
 import slotmachine.reelrelated.IReelManagerListener;
-import slotmachine.reelrelated.ReelManager;
 import slotmachine.settings.Settings;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class SlotMachine implements IReelManagerListener {
     private CoinSlot coinSlot;
     private DropBox dropBox;
     private PayoutTray payoutTray;
-    private ReelManager reelManager;
+    private IReelManager reelManager;
     private IRandomize randomize;
     private GameContext gameContext;
     private IPlayResult playResult;
@@ -45,14 +45,14 @@ public class SlotMachine implements IReelManagerListener {
         return instance;
     }
 
-    public void initComponents(IPlayResult playResult, int reelQuantity, String symbols) {
+    public void initComponents(IPlayResult playResult, IReelManager reelManager, int reelQuantity, String symbols) {
         settings = Settings.getInstance();
 
         gameContext = new GameContext();
         coinSlot = new CoinSlot();
         dropBox = new DropBox();
-        reelManager = new ReelManager(this);
         randomize = new Randomize();
+        this.reelManager = reelManager;
         this.playResult = playResult;
         this.reelQuantity = reelQuantity;
         this.symbols = symbols;
@@ -60,6 +60,8 @@ public class SlotMachine implements IReelManagerListener {
     }
 
     public void loadConfiguration() {
+        reelManager.setListener(this);
+
         int coinPool = Integer.valueOf(settings.getProperties().getProperty("coinPool"));
         dropBox.setCoinPool(coinPool);
 

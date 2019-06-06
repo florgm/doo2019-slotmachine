@@ -1,26 +1,26 @@
 package slotmachine.reelrelated;
 
-import slotmachine.settings.Settings;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ReelManager implements IReelListener {
+public class ReelManagerPokerStyle implements IReelManager, IReelListener {
     private List<Reel> reels = new ArrayList<>();
     private List<Reel> spinningReels;
-    private Settings settings;
     private IReelManagerListener reelManagerListener;
 
-    public ReelManager(IReelManagerListener reelManagerListener) {
-        settings = Settings.getInstance();
-        this.reelManagerListener = reelManagerListener;
+    public ReelManagerPokerStyle() {
         spinningReels = new ArrayList<>();
     }
 
+    @Override
+    public void setListener(IReelManagerListener reelManagerListener) {
+        this.reelManagerListener = reelManagerListener;
+    }
+
+    @Override
     public List<Integer> setReels(int reelQuantity, String stringSymbols) {
-        //List<String> reelSymbols = Arrays.asList(settings.getProperties().getProperty("symbols").split(","));
         List<String> reelSymbols = Arrays.asList(stringSymbols.split(","));
         Collections.shuffle(reelSymbols);
         List<Integer> reelSize = new ArrayList<>();
@@ -51,13 +51,15 @@ public class ReelManager implements IReelListener {
         return reelSize;
     }
 
+    @Override
     public List<Reel> getReels() {
         return reels;
     }
 
+    @Override
     public void spinReels(){
         spinningReels.addAll(reels);
-        reels.forEach(reel -> reel.spinReel());
+        reels.forEach(Reel::spinReel);
     }
 
 
