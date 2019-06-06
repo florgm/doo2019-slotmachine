@@ -10,7 +10,7 @@ import slotmachine.gamemode.random.RandomFactory;
 import slotmachine.gamemode.randomize.IRandomize;
 import slotmachine.gamemode.randomize.Randomize;
 import slotmachine.gamemode.sequence.SequenceFactory;
-import slotmachine.playresult.PlayResult;
+import slotmachine.playresult.IPlayResult;
 import slotmachine.recordrelated.RecordManager;
 import slotmachine.reelrelated.IReelManagerListener;
 import slotmachine.reelrelated.ReelManager;
@@ -27,11 +27,13 @@ public class SlotMachine implements IReelManagerListener {
     private ReelManager reelManager;
     private IRandomize randomize;
     private GameContext gameContext;
-    private PlayResult playResult;
+    private IPlayResult playResult;
     private RecordManager recordManager;
 
     public List<Integer> reelSize;
     public List<Integer> results;
+    public int reelQuantity;
+    public String symbols;
 
     private SlotMachine() { }
 
@@ -43,7 +45,7 @@ public class SlotMachine implements IReelManagerListener {
         return instance;
     }
 
-    public void initComponents() {
+    public void initComponents(IPlayResult playResult, int reelQuantity, String symbols) {
         settings = Settings.getInstance();
 
         gameContext = new GameContext();
@@ -51,7 +53,9 @@ public class SlotMachine implements IReelManagerListener {
         dropBox = new DropBox();
         reelManager = new ReelManager(this);
         randomize = new Randomize();
-        playResult = new PlayResult();
+        this.playResult = playResult;
+        this.reelQuantity = reelQuantity;
+        this.symbols = symbols;
         recordManager = new RecordManager();
     }
 
@@ -59,13 +63,12 @@ public class SlotMachine implements IReelManagerListener {
         int coinPool = Integer.valueOf(settings.getProperties().getProperty("coinPool"));
         dropBox.setCoinPool(coinPool);
 
-        int reelQuantity = Integer.valueOf(settings.getProperties().getProperty("reelQuantity"));
-        reelSize = reelManager.setReels(reelQuantity);
+        reelSize = reelManager.setReels(reelQuantity, symbols);
 
         String gameMode = settings.getProperties().getProperty("gameMode");
         int sequenceQuantity = Integer.valueOf(settings.getProperties().getProperty("sequenceQ"));
 
-        //TODO preguntar si esto esta bien
+        //TODO ver enum
         if (gameMode.equals("random")) {
             Mode random = GameModeFactory.getGameMode(new RandomFactory(reelSize,randomize));
             gameContext.setMode(random);
@@ -103,7 +106,7 @@ public class SlotMachine implements IReelManagerListener {
     public void prueba() {
         playResult.setReelsResults(results);
         playResult.setReels(reelManager.getReels());
-        playResult.readReels();
+        //playResult.readReels();
         playResult.getResult();
     }
 

@@ -19,8 +19,9 @@ public class ReelManager implements IReelListener {
         spinningReels = new ArrayList<>();
     }
 
-    public List<Integer> setReels(int reelQuantity) {
-        List<String> reelSymbols = Arrays.asList(settings.getProperties().getProperty("symbols").split(","));
+    public List<Integer> setReels(int reelQuantity, String stringSymbols) {
+        //List<String> reelSymbols = Arrays.asList(settings.getProperties().getProperty("symbols").split(","));
+        List<String> reelSymbols = Arrays.asList(stringSymbols.split(","));
         Collections.shuffle(reelSymbols);
         List<Integer> reelSize = new ArrayList<>();
 
