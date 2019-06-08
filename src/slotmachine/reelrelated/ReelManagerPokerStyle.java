@@ -1,26 +1,30 @@
 package slotmachine.reelrelated;
 
-import slotmachine.settings.Settings;
+import slotmachine.ui.handler.IReelHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ReelManager implements IReelListener {
+public class ReelManagerPokerStyle implements IReelManager, IReelListener {
     private List<Reel> reels = new ArrayList<>();
     private List<Reel> spinningReels;
-    private Settings settings;
+    private List<IReelHandler> reelHandlers;
     private IReelManagerListener reelManagerListener;
 
-    public ReelManager(IReelManagerListener reelManagerListener) {
-        settings = Settings.getInstance();
-        this.reelManagerListener = reelManagerListener;
+    public ReelManagerPokerStyle() {
         spinningReels = new ArrayList<>();
     }
 
-    public List<Integer> setReels(int reelQuantity) {
-        List<String> reelSymbols = Arrays.asList(settings.getProperties().getProperty("symbols").split(","));
+    @Override
+    public void setListener(IReelManagerListener reelManagerListener) {
+        this.reelManagerListener = reelManagerListener;
+    }
+
+    @Override
+    public List<Integer> setReels(int reelQuantity, String stringSymbols) {
+        List<String> reelSymbols = Arrays.asList(stringSymbols.split(","));
         Collections.shuffle(reelSymbols);
         List<Integer> reelSize = new ArrayList<>();
 
@@ -50,22 +54,18 @@ public class ReelManager implements IReelListener {
         return reelSize;
     }
 
+    @Override
     public List<Reel> getReels() {
-
         return reels;
     }
 
-
-    public void spinReels(){
+    @Override
+    public void spinReels(int spins, List<Integer> results){
         spinningReels.addAll(reels);
-        reels.forEach(reel -> reel.spinReel());
-    }
 
-
-    //TODO ver como le comunica ReelManager a SlotMachine que los reels dejaron de girar
-
-    public void spinFinished() {
-
+        for(int j = 0; j < results.size(); j++) {
+            reels.get(j).spinReel(spins, results.get(j));
+        }
     }
 
     @Override
@@ -75,5 +75,15 @@ public class ReelManager implements IReelListener {
         if(spinningReels.size() == 0) {
             reelManagerListener.onReelsFinished();
         }
+    }
+
+    @Override
+    public void reelUpdate(Reel r) {
+        reelHandlers.get(reels.indexOf(r)).setSymbol(r.getSymbols().get(r.getCurrentValue()));
+    }
+
+    public void setReelHandlers(List<IReelHandler> reelHandlers) {
+
+        this.reelHandlers = reelHandlers;
     }
 }

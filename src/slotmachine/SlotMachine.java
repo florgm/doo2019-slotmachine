@@ -1,34 +1,33 @@
 package slotmachine;
 
-import slotmachine.coinrelated.CoinSlot;
-import slotmachine.coinrelated.DropBox;
-import slotmachine.coinrelated.PayoutTray;
-import slotmachine.gamemode.GameMode;
-import slotmachine.gamemode.GameModeFactory;
-import slotmachine.gamemode.random.RandomFactory;
-import slotmachine.gamemode.randomize.IRandomize;
-import slotmachine.gamemode.randomize.Randomize;
-import slotmachine.gamemode.sequence.SequenceFactory;
-import slotmachine.playresult.PlayResult;
+import slotmachine.coinrelated.CoinException;
+import slotmachine.coinrelated.CoinManager;
+import slotmachine.gamemode.GameContext;
+import slotmachine.playresult.IPlayResult;
+import slotmachine.recordrelated.RecordManager;
+import slotmachine.reelrelated.IReelManager;
 import slotmachine.reelrelated.IReelManagerListener;
-import slotmachine.reelrelated.ReelManager;
 import slotmachine.settings.Settings;
+import slotmachine.ui.data.ICredit;
+import slotmachine.ui.handler.*;
 
 import java.util.List;
 
-public class SlotMachine implements IReelManagerListener {
+public class SlotMachine implements IReelManagerListener, IPlayHandler, ICreditHandler, IGameModeHandler {
     private static SlotMachine instance;
     private Settings settings;
-    private CoinSlot coinSlot;
-    private DropBox dropBox;
-    private PayoutTray payoutTray;
-    private ReelManager reelManager;
-    private IRandomize randomize;
-    private GameMode random;
-    private GameMode sequence;
-    private PlayResult playResult;
 
-    public List<Integer> reelSize;
+    private CoinManager coinManager;
+    private IReelManager reelManager;
+    private GameContext gameContext;
+    private IPlayResult playResult;
+
+    private IDisplayHandler iDisplayHandler;
+    private IPrizeHandler iPrizeHandler;
+    private IReelsHandler iReelsHandler;
+
+    private int reelQuantity;
+    private String symbols;
 
     private SlotMachine() { }
 
@@ -40,73 +39,111 @@ public class SlotMachine implements IReelManagerListener {
         return instance;
     }
 
-    public void initComponents() {
+    public void initComponents(IPlayResult playResult, IReelManager reelManager, int reelQuantity, String symbols) {
         settings = Settings.getInstance();
 
-        coinSlot = new CoinSlot();
-        dropBox = new DropBox();
-        reelManager = new ReelManager(this);
-        randomize = new Randomize();
-        playResult = new PlayResult();
+        this.reelManager = reelManager;
+        this.playResult = playResult;
+        this.reelQuantity = reelQuantity;
+        this.symbols = symbols;
 
-
-        //Aca faltaria iniciar recordManager
-
+        gameContext = new GameContext();
+        coinManager = new CoinManager();
     }
 
     public void loadConfiguration() {
-        int coinPool = Integer.valueOf(settings.getProperties().getProperty("coinPool"));
-        dropBox.setCoinPool(coinPool);
+        reelManager.setListener(this);
 
-        int reelQuantity = Integer.valueOf(settings.getProperties().getProperty("reelQuantity"));
-        reelSize = reelManager.setReels(reelQuantity);
+        int coinPool = Integer.valueOf(settings.getProperties().getProperty("coinPool"));
+        coinManager.loadCoins(coinPool);
+
+        List<Integer> reelSize = reelManager.setReels(reelQuantity, symbols);
+
+        gameContext.setReelSizes(reelSize);
 
         String gameMode = settings.getProperties().getProperty("gameMode");
-        int sequenceQuantity = Integer.valueOf(settings.getProperties().getProperty("sequenceQ"));
 
         if (gameMode.equals("random")) {
-            random = GameModeFactory.getGameMode(new RandomFactory(reelSize, randomize));
+            gameContext.setMode("random");
         }
         else {
-            sequence = GameModeFactory.getGameMode(new SequenceFactory(reelSize,sequenceQuantity, randomize));
+            gameContext.setMode("sequence");
         }
 
+    }
+
+    public void setiDisplayHandler(IDisplayHandler iDisplayHandler) {
+        this.iDisplayHandler = iDisplayHandler;
+    }
+
+    public void setiPrizeHandler (IPrizeHandler iPrizeHandler) {
+        this.iPrizeHandler = iPrizeHandler;
+    }
+
+    public void setiReelsHandler (IReelsHandler iReelsHandler) {
+        this.iReelsHandler = iReelsHandler;
+        reelManager.setReelHandlers(iReelsHandler.getReelsHandler());
+    }
+
+    public void showMessage(String msg) {
+        if(iDisplayHandler != null) {
+            iDisplayHandler.setText(msg);
+        }
+    }
+
+    public void addCredit(ICredit coin) {
+        coinManager.insertCredit(coin.getValue());
+        showMessage("Coins: " + coinManager.getBet());
+    }
+
+
+    public void play() {
+        if(coinManager.playAllowed()) {
+            List<Integer> result = gameContext.getNextValues();
+
+            showMessage("Spinning");
+
+            coinManager.addCoinsInDropBox();
+
+            playResult.setComponents(result, reelManager.getReels(), coinManager.getBet());
+
+            coinManager.setPrize(playResult.getResult());
+
+            reelManager.spinReels(2, result);
+
+            RecordManager.getInstance().setRecord(coinManager.getBet(), playResult.getSymbolResult(), coinManager.getPrize());
+        } else {
+            showMessage("Insufficient coins to play");
+        }
     }
 
     public void onReelsFinished() {
-        //TODO este metodo se llama cuando todos los reels terminan de girar
-        System.out.println("Todos los reels terminaron");
-    }
+        int prize = coinManager.getPrize();
 
-    public void getResult() {
-        System.out.println(random.getNextValues());
-    }
-
-    public void reels() {
-        for(int i = 0; i < reelSize.size(); i++) {
-            System.out.println("Reel " + i + ": " + reelSize.get(i));
+        try {
+            iPrizeHandler.retrieve(coinManager.deliverPrize(prize));
+        } catch (CoinException exc) {
+            exc.printStackTrace();
+            showMessage("Error...");
+            return;
         }
 
+        if(prize > 0) {
+            showMessage("You won " + prize + " coins");
+        } else {
+            showMessage("Thank you for playing");
+        }
+
+        coinManager.resetBet();
+        coinManager.resetPrize();
     }
 
-    public void prueba() {
-        playResult.setReelsResults(random.getNextValues());
-        playResult.setReels(reelManager.getReels());
-        playResult.readReels();
+    public void reset() {
+        loadConfiguration();
     }
 
-    public void play() {
-//        int coins = coinSlot.getCoins();
-//
-//        if(coins > 0) {
-//            dropBox.setBet(coins);
-//
-//
-//
-//        } else {
-//          System.out.println("No hay monedas ingresadas para jugar");
-//        }
-        reelManager.spinReels();
+    @Override
+    public String change() {
+        return gameContext.changeMode();
     }
-
 }

@@ -21,26 +21,10 @@ public class Settings {
                 //Setear por default
                 properties.setProperty("coinPool","300");
                 properties.setProperty("gameMode","random");
-                properties.setProperty("reelQuantity","5");
-                properties.setProperty("sequenceQ", "10");
-
-                //clubs es trebol y spades es pica
-                properties.setProperty("symbols","AD,AH,AC,AS,"+
-                                                 "2D,2H,2C,2S," +
-                                                 "3D,3H,3C,3S," +
-                                                 "4D,4H,4C,4S," +
-                                                 "5D,5H,5C,5S," +
-                                                 "6D,6H,6C,6S," +
-                                                 "7D,7H,7C,7S," +
-                                                 "8D,8H,8C,8S," +
-                                                 "9D,9H,9C,9S," +
-                                                 "10D,10H,10C,10S," +
-                                                 "JD,JH,JC,JS," +
-                                                 "QD,QH,QC,QS," +
-                                                 "KD,KH,KC,KS");
 
             } finally {
                 instance.setProperties(properties);
+                instance.saveSettings();
             }
         }
         return instance;
@@ -52,7 +36,7 @@ public class Settings {
 
     public Properties loadSettings() throws ConfigExceptions {
         try {
-            InputStream input = new FileInputStream(System.getProperty("user.dir") + File.separator + "settings.properties");
+            InputStream input = new FileInputStream(System.getProperty("user.dir") +  "/resources/settings.properties");
             Properties prop = new Properties();
             prop.load(input);
             return prop;
@@ -63,7 +47,7 @@ public class Settings {
 
     public void saveSettings() {
         try {
-            OutputStream output = new FileOutputStream(System.getProperty("user.dir") + File.separator + "config.properties");
+            OutputStream output = new FileOutputStream(System.getProperty("user.dir") + "/resources/settings.properties");
             properties.store(output,null);
         }
         catch (FileNotFoundException e){
