@@ -21,7 +21,6 @@ public class Settings {
                 //Setear por default
                 properties.setProperty("coinPool","300");
                 properties.setProperty("gameMode","random");
-                properties.setProperty("sequenceQ", "10");
 
             } finally {
                 instance.setProperties(properties);

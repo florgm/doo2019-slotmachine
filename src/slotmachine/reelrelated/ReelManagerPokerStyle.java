@@ -1,5 +1,7 @@
 package slotmachine.reelrelated;
 
+import slotmachine.ui.handler.IReelHandler;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,6 +10,7 @@ import java.util.List;
 public class ReelManagerPokerStyle implements IReelManager, IReelListener {
     private List<Reel> reels = new ArrayList<>();
     private List<Reel> spinningReels;
+    private List<IReelHandler> reelHandlers;
     private IReelManagerListener reelManagerListener;
 
     public ReelManagerPokerStyle() {
@@ -57,11 +60,13 @@ public class ReelManagerPokerStyle implements IReelManager, IReelListener {
     }
 
     @Override
-    public void spinReels(){
+    public void spinReels(int spins, List<Integer> results){
         spinningReels.addAll(reels);
-        reels.forEach(Reel::spinReel);
-    }
 
+        for(int j = 0; j < results.size(); j++) {
+            reels.get(j).spinReel(spins, results.get(j));
+        }
+    }
 
     @Override
     public void spinFinished(Reel r) {
@@ -70,5 +75,15 @@ public class ReelManagerPokerStyle implements IReelManager, IReelListener {
         if(spinningReels.size() == 0) {
             reelManagerListener.onReelsFinished();
         }
+    }
+
+    @Override
+    public void reelUpdate(Reel r) {
+        reelHandlers.get(reels.indexOf(r)).setSymbol(r.getSymbols().get(r.getCurrentValue()));
+    }
+
+    public void setReelHandlers(List<IReelHandler> reelHandlers) {
+
+        this.reelHandlers = reelHandlers;
     }
 }

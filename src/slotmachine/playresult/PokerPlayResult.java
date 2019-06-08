@@ -6,19 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PokerPlayResult implements IPlayResult {
-    private boolean win;
     private List<Integer> reelsResults;
     private List<Reel> reels;
+    private int bet;
     private static String[] values = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
 
-    @Override
-    public void setReelsResults(List<Integer> reelsResults) {
+    public void setComponents(List<Integer> reelsResults, List<Reel> reels, int bet) {
         this.reelsResults = reelsResults;
-    }
-
-    @Override
-    public void setReels(List<Reel> reels) {
         this.reels = reels;
+        this.bet = bet;
     }
 
    /* public void readReels() {
@@ -32,7 +28,7 @@ public class PokerPlayResult implements IPlayResult {
     }*/
 
    @Override
-    public void getResult() {
+    public int getResult() {
         List<String> results = new ArrayList<>();
         int finishedResult = 0;
         int sameCards = 1, sameCards2 = 1;
@@ -91,45 +87,57 @@ public class PokerPlayResult implements IPlayResult {
 
         if(sameCards == 1) { //No gano nada
             finishedResult = 1;
+            bet = 0;
         }
 
         if(sameCards == 2 && sameCards2 == 1) { //pair
             finishedResult = 2;
+            bet = bet*2;
         }
 
         if(sameCards == 2 && sameCards2 == 2) { //two pair
             finishedResult = 3;
+            bet = bet*3;
         }
 
         if(sameCards == 3 && sameCards2 != 2) { //three of a kind
             finishedResult = 4;
+            bet = bet*4;
         }
 
         if(straight) {
             finishedResult = 5;
+            bet = bet*5;
         }
 
         if(flush) {
             finishedResult = 6;
+            bet = bet*6;
         }
 
         if(sameCards == 3 && sameCards2 == 2) { //full house
             finishedResult = 7;
+            bet = bet*7;
         }
 
         if(sameCards == 4) { //four of a kind
             finishedResult = 8;
+            bet = bet*8;
         }
 
         if(straight && flush) { //straight flush
             finishedResult = 9;
+            bet = bet*10;
         }
 
 
-        for(int x = 0; x < ranks.length; x++) {
-            System.out.println(ranks[x]);
+//        for(int x = 0; x < ranks.length; x++) {
+//            System.out.println(ranks[x]);
+//
+//        }
+//        System.out.println(finishedResult);
+//        System.out.println(bet);
 
-        }
-        System.out.println(finishedResult);
+        return bet;
     }
 }

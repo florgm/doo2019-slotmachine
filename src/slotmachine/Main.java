@@ -1,7 +1,9 @@
 package slotmachine;
 
 import slotmachine.playresult.PokerPlayResult;
+import slotmachine.recordrelated.RecordManager;
 import slotmachine.reelrelated.ReelManagerPokerStyle;
+import slotmachine.ui.view.SlotMachineViewFacade;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +15,8 @@ public class Main {
         SlotMachine slotMachine;
         Properties properties = new Properties();
 
+        RecordManager.getInstance().loadRecords();
+
         slotMachine = SlotMachine.getInstance();
 
         try {
@@ -23,17 +27,18 @@ public class Main {
             System.out.println("Error al abrir el archivo");;
         }
 
+        SlotMachineViewFacade.setPlayHandler(slotMachine);
+        SlotMachineViewFacade.setCreditHandler(slotMachine);
+        SlotMachineViewFacade.setGameModeHandler(slotMachine);
 
-        slotMachine.initComponents(new PokerPlayResult(), new ReelManagerPokerStyle(), 5, properties.getProperty("symbols"));
+        slotMachine.initComponents(new PokerPlayResult(), new ReelManagerPokerStyle(), Integer.valueOf(properties.getProperty("reelQuantity")), properties.getProperty("symbols"));
         slotMachine.loadConfiguration();
 
-        slotMachine.getResult();
-        //slotMachine.guardarRecord();
-//        slotMachine.reels();
-//
-        slotMachine.prueba();
+        slotMachine.setiDisplayHandler(SlotMachineViewFacade.getDisplayHandler());
+        slotMachine.setiPrizeHandler(SlotMachineViewFacade.getPrizeHandler());
+        slotMachine.setiReelsHandler(SlotMachineViewFacade.getReelsHandler());
 
-//
-//        slotMachine.play();
+        SlotMachineViewFacade.show();
+
     }
 }

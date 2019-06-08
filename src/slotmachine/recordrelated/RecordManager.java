@@ -1,19 +1,63 @@
 package slotmachine.recordrelated;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-//TODO que pasa con esto? Tendria que tenerlo guardado en properties?
 public class RecordManager {
-    private List<Record> records = new ArrayList<>();
-    //private String result;
+    private static RecordManager instance;
+    private List<Record> records;
 
-    public void setRecord(int result) {
-        records.add(new Record(result));
+    private RecordManager() {
+        records = new ArrayList<>();
+    }
+
+    public static RecordManager getInstance() {
+        if(instance == null) {
+            instance = new RecordManager();
+        }
+        return instance;
+    }
+
+    public boolean saveRecords() {
+        File file = new File("records.txt");
+        Gson gson = new Gson();
+
+        try {
+            FileWriter writer = new FileWriter(file, false);
+            writer.write(gson.toJson(records));
+            writer.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public boolean loadRecords() {
+        Gson gson = new Gson();
+
+        try {
+            JsonReader reader = new JsonReader(new FileReader("records.txt"));
+            records = gson.fromJson(reader, new TypeToken<List<Record>>(){}.getType());
+            return Boolean.TRUE;
+        } catch (FileNotFoundException exc) {
+            exc.printStackTrace();
+            return Boolean.FALSE;
+        }
+
+    }
+
+    public void setRecord(int bet, List<Integer> reelsResult, int prize) {
+        records.add(new Record(bet, reelsResult, prize));
+        saveRecords();
     }
 
     public void getRecords() {
+        System.out.println("Records: ");
         for(int i = 0; i < records.size(); i++) {
             System.out.println(records.get(i).getRecord());
         }
