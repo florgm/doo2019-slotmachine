@@ -17,20 +17,19 @@ public class PokerPlayResult implements IPlayResult {
         this.bet = bet;
     }
 
-   /* public void readReels() {
+    public List<String> getSymbolResult() {
+        List<String> symbolsResult = new ArrayList<>();
+
         for(int i = 0; i < reelsResults.size(); i++) {
-            System.out.println("Resultados: " + reelsResults.get(i));
+            symbolsResult.add(reels.get(i).getSymbols().get(reelsResults.get(i)));
         }
 
-        for(int i = 0; i < reels.size(); i++) {
-            System.out.println("Reel"+ i + ": " + reels.get(i).getSymbols());
-        }
-    }*/
+        return  symbolsResult;
+    }
 
    @Override
     public int getResult() {
         List<String> results = new ArrayList<>();
-        int finishedResult = 0;
         int sameCards = 1, sameCards2 = 1;
         boolean straight = false;
         boolean flush = true;
@@ -85,58 +84,41 @@ public class PokerPlayResult implements IPlayResult {
             straight = true;
         }
 
-        if(sameCards == 1) { //No gano nada
-            finishedResult = 1;
+        if(sameCards == 1) { //Nothing
             bet = 0;
         }
 
         if(sameCards == 2 && sameCards2 == 1) { //pair
-            finishedResult = 2;
             bet = bet*2;
         }
 
         if(sameCards == 2 && sameCards2 == 2) { //two pair
-            finishedResult = 3;
             bet = bet*3;
         }
 
         if(sameCards == 3 && sameCards2 != 2) { //three of a kind
-            finishedResult = 4;
             bet = bet*4;
         }
 
         if(straight) {
-            finishedResult = 5;
             bet = bet*5;
         }
 
         if(flush) {
-            finishedResult = 6;
             bet = bet*6;
         }
 
         if(sameCards == 3 && sameCards2 == 2) { //full house
-            finishedResult = 7;
             bet = bet*7;
         }
 
         if(sameCards == 4) { //four of a kind
-            finishedResult = 8;
             bet = bet*8;
         }
 
         if(straight && flush) { //straight flush
-            finishedResult = 9;
             bet = bet*10;
         }
-
-
-//        for(int x = 0; x < ranks.length; x++) {
-//            System.out.println(ranks[x]);
-//
-//        }
-//        System.out.println(finishedResult);
-//        System.out.println(bet);
 
         return bet;
     }

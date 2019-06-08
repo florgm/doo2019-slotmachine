@@ -111,9 +111,9 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, ICreditH
 
             reelManager.spinReels(2, result);
 
-            RecordManager.getInstance().setRecord(coinManager.getBet(), result, coinManager.getPrize());
+            RecordManager.getInstance().setRecord(coinManager.getBet(), playResult.getSymbolResult(), coinManager.getPrize());
         } else {
-
+            showMessage("Insufficient coins to play");
         }
     }
 

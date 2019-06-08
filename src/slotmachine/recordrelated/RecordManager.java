@@ -43,15 +43,15 @@ public class RecordManager {
         try {
             JsonReader reader = new JsonReader(new FileReader("records.txt"));
             records = gson.fromJson(reader, new TypeToken<List<Record>>(){}.getType());
-            return Boolean.TRUE;
+            return true;
         } catch (FileNotFoundException exc) {
             exc.printStackTrace();
-            return Boolean.FALSE;
+            return false;
         }
 
     }
 
-    public void setRecord(int bet, List<Integer> reelsResult, int prize) {
+    public void setRecord(int bet, List<String> reelsResult, int prize) {
         records.add(new Record(bet, reelsResult, prize));
         saveRecords();
     }

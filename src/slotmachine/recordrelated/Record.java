@@ -7,7 +7,7 @@ import java.util.List;
 public class Record {
     private String record;
 
-    public Record(int bet, List<Integer> reelsResult, int prize) {
+    public Record(int bet, List<String> reelsResult, int prize) {
         SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd h:mm a");
 
         StringBuilder builder = new StringBuilder();
