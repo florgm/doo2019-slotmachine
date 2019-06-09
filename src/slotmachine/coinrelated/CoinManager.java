@@ -14,11 +14,23 @@ public class CoinManager {
         dropBox = new DropBox();
     }
 
+    public void loadCoins(int coins) {
+        dropBox.setCoinPool(coins);
+    }
+
+    public void insertCredit(int coin) {
+        coinSlot.insertCoin(coin);
+        bet += coin;
+    }
+
     public boolean playAllowed() {
-        if(coinSlot.getCoins() > 0) {
-            return true;
-        }
-        return false;
+        return coinSlot.getCoins() > 0;
+    }
+
+    public void addCoinsInDropBox() {
+        bet = coinSlot.getCoins();
+        dropBox.addToCoinPool(bet);
+        coinSlot.resetCoinSlot();
     }
 
     public void setPrize(int prize) {
@@ -31,21 +43,6 @@ public class CoinManager {
 
     public int getBet() {
         return bet;
-    }
-
-    public void addCoinsInDropBox() {
-        bet = coinSlot.getCoins();
-        dropBox.addToCoinPool(bet);
-        coinSlot.resetCoinSlot();
-    }
-
-    public void insertCredit(int coin) {
-        coinSlot.insertCoin(coin);
-        bet += coin;
-    }
-
-    public void loadCoins(int coins) {
-        dropBox.setCoinPool(coins);
     }
 
     public void resetBet() {

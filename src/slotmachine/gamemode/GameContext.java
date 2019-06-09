@@ -18,7 +18,7 @@ public class GameContext implements Mode{
 
     public void setMode(String gameMode) {
         IRandomize randomize = new Randomize();
-
+        System.out.println(gameMode);
         this.gameModeKey = gameMode;
 
         if(gameMode.equals("random")) {
@@ -31,10 +31,10 @@ public class GameContext implements Mode{
     public String changeMode() {
         if(gameModeKey.equals("random")) {
             this.setMode("sequence");
-            return "Sequence";
+            return "Random";
         } else {
             this.setMode("random");
-            return "Random";
+            return "Sequence";
         }
     }
 

@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 public class Reel {
     private List<String> symbols;
     private IReelListener reelListener;
-    int currentValue;
+    private int currentValue;
 
     public Reel(List<String> symbols, IReelListener rl) {
         this.symbols = symbols;

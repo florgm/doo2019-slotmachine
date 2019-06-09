@@ -83,7 +83,6 @@ public class ReelManagerPokerStyle implements IReelManager, IReelListener {
     }
 
     public void setReelHandlers(List<IReelHandler> reelHandlers) {
-
         this.reelHandlers = reelHandlers;
     }
 }

@@ -28,15 +28,16 @@ public class Main {
         }
 
         SlotMachineViewFacade.setPlayHandler(slotMachine);
+        SlotMachineViewFacade.setResetHandler(slotMachine);
         SlotMachineViewFacade.setCreditHandler(slotMachine);
         SlotMachineViewFacade.setGameModeHandler(slotMachine);
 
         slotMachine.initComponents(new PokerPlayResult(), new ReelManagerPokerStyle(), Integer.valueOf(properties.getProperty("reelQuantity")), properties.getProperty("symbols"));
         slotMachine.loadConfiguration();
 
-        slotMachine.setiDisplayHandler(SlotMachineViewFacade.getDisplayHandler());
-        slotMachine.setiPrizeHandler(SlotMachineViewFacade.getPrizeHandler());
-        slotMachine.setiReelsHandler(SlotMachineViewFacade.getReelsHandler());
+        slotMachine.setIDisplayHandler(SlotMachineViewFacade.getDisplayHandler());
+        slotMachine.setIPrizeHandler(SlotMachineViewFacade.getPrizeHandler());
+        slotMachine.setIReelsHandler(SlotMachineViewFacade.getReelsHandler());
 
         SlotMachineViewFacade.show();
 

@@ -24,7 +24,7 @@ public class PokerPlayResult implements IPlayResult {
             symbolsResult.add(reels.get(i).getSymbols().get(reelsResults.get(i)));
         }
 
-        return  symbolsResult;
+        return symbolsResult;
     }
 
    @Override
