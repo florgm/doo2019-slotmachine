@@ -12,8 +12,6 @@ public abstract class GameMode implements Mode{
         this.randomize = randomize;
     }
 
-    public abstract List<Integer> getNextValues();
-
     protected List<Integer> getRandoms(List<Integer> reelSize) {
         List<Integer> result = new ArrayList<>();
 

@@ -1,6 +1,5 @@
 package slotmachine.reelrelated;
 
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

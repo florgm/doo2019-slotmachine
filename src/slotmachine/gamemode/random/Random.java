@@ -6,7 +6,7 @@ import slotmachine.gamemode.randomize.IRandomize;
 
 import java.util.List;
 
-public class Random extends GameMode implements Mode {
+public class Random extends GameMode {
     private List<Integer> reelSize;
 
     public Random (List<Integer> reelSize, IRandomize rand) {

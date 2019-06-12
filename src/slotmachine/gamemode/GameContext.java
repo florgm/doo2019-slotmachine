@@ -11,14 +11,14 @@ public class GameContext implements Mode{
     private Mode mode;
     private String gameModeKey;
     private List<Integer> reelSizes;
-
+    //TODO ver de hacer un enum
     public void setReelSizes(List<Integer> reelSizes) {
         this.reelSizes = reelSizes;
     }
 
     public void setMode(String gameMode) {
         IRandomize randomize = new Randomize();
-        System.out.println(gameMode);
+
         this.gameModeKey = gameMode;
 
         if(gameMode.equals("random")) {
@@ -28,6 +28,7 @@ public class GameContext implements Mode{
         }
     }
 
+    //TODO cada vez que cambio el modo se tiene que guardar la configuracion en el settings
     public String changeMode() {
         if(gameModeKey.equals("random")) {
             this.setMode("sequence");

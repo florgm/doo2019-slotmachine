@@ -7,7 +7,7 @@ import slotmachine.gamemode.randomize.IRandomize;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sequence extends GameMode implements Mode {
+public class Sequence extends GameMode {
     private List<List<Integer>> sequence;
     private int index;
 
