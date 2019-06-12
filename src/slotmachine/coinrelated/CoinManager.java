@@ -33,6 +33,14 @@ public class CoinManager {
         coinSlot.resetCoinSlot();
     }
 
+    public int updateCoinPool(int prize) {
+        int oldCoinPool = dropBox.getCoinPool();
+        int newCoinPool = oldCoinPool - prize;
+        dropBox.setCoinPool(newCoinPool);
+
+        return newCoinPool;
+    }
+
     public void setPrize(int prize) {
         this.prize = prize;
     }

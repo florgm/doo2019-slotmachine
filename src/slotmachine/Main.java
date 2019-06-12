@@ -31,6 +31,7 @@ public class Main {
         SlotMachineViewFacade.setResetHandler(slotMachine);
         SlotMachineViewFacade.setCreditHandler(slotMachine);
         SlotMachineViewFacade.setGameModeHandler(slotMachine);
+        SlotMachineViewFacade.setRecordsHandler(slotMachine);
 
         slotMachine.initComponents(new PokerPlayResult(), new ReelManagerPokerStyle(), Integer.valueOf(properties.getProperty("reelQuantity")), properties.getProperty("symbols"));
         slotMachine.loadConfiguration();

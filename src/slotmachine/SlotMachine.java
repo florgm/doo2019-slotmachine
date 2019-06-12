@@ -3,6 +3,7 @@ package slotmachine;
 import slotmachine.coinrelated.CoinException;
 import slotmachine.coinrelated.CoinManager;
 import slotmachine.gamemode.GameContext;
+import slotmachine.gamemode.GameMode;
 import slotmachine.playresult.IPlayResult;
 import slotmachine.recordrelated.RecordManager;
 import slotmachine.reelrelated.IReelManager;
@@ -14,7 +15,7 @@ import slotmachine.ui.view.SlotMachineViewFacade;
 
 import java.util.List;
 
-public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHandler,ICreditHandler, IGameModeHandler {
+public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHandler,ICreditHandler, IGameModeHandler, IRecordsHandler {
     private static SlotMachine instance;
     private Settings settings;
 
@@ -135,6 +136,9 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
             showMessage("Thank you for playing");
         }
 
+        int newCoinPool = coinManager.updateCoinPool(prize);
+        settings.setCoinPool(newCoinPool);
+        settings.saveSettings();
         coinManager.resetBet();
         coinManager.resetPrize();
         SlotMachineViewFacade.setInputEnabled(true);
@@ -149,6 +153,13 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
     }
 
     public String change() {
-        return gameContext.changeMode();
+        String gameMode = gameContext.changeMode();
+        settings.setGameMode(gameContext.getGameModeKey());
+        settings.saveSettings();
+        return gameMode;
+    }
+
+    public void printRecords() {
+        RecordManager.getInstance().getRecords();
     }
 }
