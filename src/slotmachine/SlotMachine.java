@@ -3,11 +3,11 @@ package slotmachine;
 import slotmachine.coinrelated.CoinException;
 import slotmachine.coinrelated.CoinManager;
 import slotmachine.gamemode.GameContext;
-import slotmachine.gamemode.GameMode;
-import slotmachine.playresult.IPlayResult;
+import slotmachine.playresult.IPlayResultGenerator;
 import slotmachine.recordrelated.RecordManager;
 import slotmachine.reelrelated.IReelManager;
 import slotmachine.reelrelated.IReelManagerListener;
+import slotmachine.reelrelated.Reel;
 import slotmachine.settings.Settings;
 import slotmachine.ui.data.ICredit;
 import slotmachine.ui.handler.*;
@@ -22,11 +22,11 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
     private CoinManager coinManager;
     private IReelManager reelManager;
     private GameContext gameContext;
-    private IPlayResult playResult;
+    private IPlayResultGenerator playResult;
 
     private IDisplayHandler iDisplayHandler;
     private IPrizeHandler iPrizeHandler;
-    private IReelsHandler iReelsHandler;
+    private IReelHandler reelHandler;
 
     private int reelQuantity;
     private String symbols;
@@ -43,26 +43,25 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
         return instance;
     }
 
-    public void initComponents(IPlayResult playResult, IReelManager reelManager, int reelQuantity, String symbols) {
+    public void initComponents(IPlayResultGenerator playResult, IReelManager reelManager) {
         settings = Settings.getInstance();
 
         this.reelManager = reelManager;
         this.playResult = playResult;
-        this.reelQuantity = reelQuantity;
-        this.symbols = symbols;
 
         gameContext = new GameContext();
         coinManager = new CoinManager();
 
     }
 
-    public void loadConfiguration() {
+    public void loadConfiguration(List<Reel> reels) {
         reelManager.setListener(this);
 
         coinPool = Integer.valueOf(settings.getProperties().getProperty("coinPool"));
         coinManager.loadCoins(coinPool);
 
-        List<Integer> reelSize = reelManager.setReels(reelQuantity, symbols);
+        reelManager.setReels(reels);
+        List<Integer> reelSize = reelManager.getReelsSizes();
 
         gameContext.setReelSizes(reelSize);
 
@@ -79,10 +78,7 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
         this.iPrizeHandler = iPrizeHandler;
     }
 
-    public void setIReelsHandler (IReelsHandler iReelsHandler) {
-        this.iReelsHandler = iReelsHandler;
-        reelManager.setReelHandlers(iReelsHandler.getReelsHandler());
-    }
+    public void setReelHandler(IReelHandler reelHandler) { this.reelHandler = reelHandler; }
 
     public void showMessage(String msg) {
         if(iDisplayHandler != null) {
@@ -107,9 +103,9 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
 
             coinManager.addCoinsInDropBox();
 
-            playResult.setComponents(result, reelManager.getReels(), coinManager.getBet());
+            playResult.setReelsResults(result);
 
-            coinManager.setPrize(playResult.getResult());
+            coinManager.setPrize(playResult.getResult(coinManager.getBet()));
 
             reelManager.spinReels(2, result);
 
@@ -143,6 +139,10 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
         coinManager.resetPrize();
         SlotMachineViewFacade.setInputEnabled(true);
         SlotMachineViewFacade.setCreditInputEnabled(true);
+    }
+
+    public void notifyReelHandler() {
+        reelHandler.update();
     }
 
     public void reset() {

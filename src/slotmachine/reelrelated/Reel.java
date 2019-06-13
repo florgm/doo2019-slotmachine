@@ -9,8 +9,11 @@ public class Reel {
     private IReelListener reelListener;
     private int currentValue;
 
-    public Reel(List<String> symbols, IReelListener rl) {
+    public Reel(List<String> symbols) {
         this.symbols = symbols;
+    }
+
+    public void setReelListener(IReelListener rl) {
         this.reelListener = rl;
     }
 
