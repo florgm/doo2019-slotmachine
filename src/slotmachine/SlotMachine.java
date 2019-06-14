@@ -8,29 +8,27 @@ import slotmachine.recordrelated.RecordManager;
 import slotmachine.reelrelated.IReelManager;
 import slotmachine.reelrelated.IReelManagerListener;
 import slotmachine.reelrelated.Reel;
-import slotmachine.settings.Settings;
-import slotmachine.ui.data.ICredit;
+import slotmachine.settinglistener.ISettingListener;
 import slotmachine.ui.handler.*;
 import slotmachine.ui.view.SlotMachineViewFacade;
 
 import java.util.List;
 
-public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHandler,ICreditHandler, IGameModeHandler, IRecordsHandler {
+public class SlotMachine implements IReelManagerListener {
     private static SlotMachine instance;
-    private Settings settings;
 
     private CoinManager coinManager;
     private IReelManager reelManager;
     private GameContext gameContext;
     private IPlayResultGenerator playResult;
+    private ISettingListener settingListener;
 
     private IDisplayHandler iDisplayHandler;
     private IPrizeHandler iPrizeHandler;
     private IReelHandler reelHandler;
 
-    private int reelQuantity;
-    private String symbols;
     private int coinPool;
+    private int prize;
     private String gameMode;
 
     private SlotMachine() { }
@@ -43,11 +41,12 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
         return instance;
     }
 
-    public void initComponents(IPlayResultGenerator playResult, IReelManager reelManager) {
-        settings = Settings.getInstance();
-
+    public void initComponents(IPlayResultGenerator playResult, IReelManager reelManager, ISettingListener settingListener, int coinPool, String gameMode) {
+        this.settingListener = settingListener;
         this.reelManager = reelManager;
         this.playResult = playResult;
+        this.coinPool = coinPool;
+        this.gameMode = gameMode;
 
         gameContext = new GameContext();
         coinManager = new CoinManager();
@@ -57,16 +56,12 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
     public void loadConfiguration(List<Reel> reels) {
         reelManager.setListener(this);
 
-        coinPool = Integer.valueOf(settings.getProperties().getProperty("coinPool"));
         coinManager.loadCoins(coinPool);
 
         reelManager.setReels(reels);
         List<Integer> reelSize = reelManager.getReelsSizes();
 
         gameContext.setReelSizes(reelSize);
-
-        gameMode = settings.getProperties().getProperty("gameMode");
-
         gameContext.setMode(gameMode);
     }
 
@@ -86,15 +81,17 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
         }
     }
 
-    public void addCredit(ICredit coin) {
-        coinManager.insertCredit(coin.getValue());
-        showMessage("Coins: " + coinManager.getBet());
+    public void addCoins(int coin) {
+        coinManager.insertCredit(coin);
+        showMessage("Coins " + coinManager.getBet());
+
     }
 
     public void play() {
         if(coinManager.playAllowed()) {
-            SlotMachineViewFacade.setCreditInputEnabled(false);
             SlotMachineViewFacade.setInputEnabled(false);
+            SlotMachineViewFacade.setCreditInputEnabled(false);
+
             iPrizeHandler.reset();
 
             List<Integer> result = gameContext.getNextValues();
@@ -107,7 +104,7 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
 
             coinManager.setPrize(playResult.getResult(coinManager.getBet()));
 
-            reelManager.spinReels(2, result);
+            reelManager.spinReels(1, result);
 
             RecordManager.getInstance().setRecord(coinManager.getBet(), playResult.getSymbolResult(), coinManager.getPrize());
         } else {
@@ -116,7 +113,8 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
     }
 
     public void onReelsFinished() {
-        int prize = coinManager.getPrize();
+        prize = coinManager.getPrize();
+        //System.out.println("Prize en reels finished " + prize);
 
         try {
             iPrizeHandler.retrieve(coinManager.deliverPrize(prize));
@@ -132,9 +130,10 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
             showMessage("Thank you for playing");
         }
 
-        int newCoinPool = coinManager.updateCoinPool(prize);
-        settings.setCoinPool(newCoinPool);
-        settings.saveSettings();
+        //int newCoinPool = coinManager.updateCoinPool(prize);
+        settingListener.updateCoinPool();
+        //settings.setCoinPool(newCoinPool);
+        //settings.saveSettings();
         coinManager.resetBet();
         coinManager.resetPrize();
         SlotMachineViewFacade.setInputEnabled(true);
@@ -145,18 +144,31 @@ public class SlotMachine implements IReelManagerListener, IPlayHandler, IResetHa
         reelHandler.update();
     }
 
+    public int getNewCoinPool() {
+        int newCoinPool = coinManager.updateCoinPool(prize);
+
+        return newCoinPool;
+    }
+
+    public void setGameMode(String gameMode) {
+        gameContext.setMode(gameMode);
+        settingListener.updateGameMode();
+        //settings.setGameMode(gameMode);
+        //settings.saveSettings();
+    }
+
+    public String getGameMode() {
+        return gameContext.getGameModeKey();
+    }
+
     public void reset() {
         iPrizeHandler.reset();
         coinManager.loadCoins(coinPool);
-        gameContext.setMode(gameMode);
+        gameContext.setMode("RANDOM");
+        settingListener.updateGameMode();
+        //settings.setGameMode("RANDOM");
+        //settings.saveSettings();
         showMessage("Insert Coins");
-    }
-
-    public String change() {
-        String gameMode = gameContext.changeMode();
-        settings.setGameMode(gameContext.getGameModeKey());
-        settings.saveSettings();
-        return gameMode;
     }
 
     public void printRecords() {

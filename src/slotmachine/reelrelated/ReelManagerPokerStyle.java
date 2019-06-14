@@ -1,16 +1,13 @@
 package slotmachine.reelrelated;
 
-import slotmachine.ui.handler.IReelHandler;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ReelManagerPokerStyle implements IReelManager, IReelListener {
     private List<Reel> reels = new ArrayList<>();
     private List<Reel> spinningReels;
     private IReelManagerListener reelManagerListener;
+    private int updatedReels = reels.size();
 
     public ReelManagerPokerStyle() {
         spinningReels = new ArrayList<>();
@@ -68,9 +65,11 @@ public class ReelManagerPokerStyle implements IReelManager, IReelListener {
 
     @Override
     public void reelUpdate(Reel r) {
-        //reelHandlers.get(reels.indexOf(r)).setSymbol(r.getSymbols().get(r.getCurrentValue()));
         synchronized (this) {
-            reelManagerListener.notifyReelHandler();
+            updatedReels = ++updatedReels % reels.size();
+
+            if(updatedReels == 0)
+                reelManagerListener.notifyReelHandler();
         }
     }
 }

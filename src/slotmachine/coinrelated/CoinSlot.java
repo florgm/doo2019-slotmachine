@@ -9,6 +9,7 @@ public class CoinSlot {
 
     public void insertCoin(int coin) {
         coins += coin;
+        //System.out.println(coins);
     }
 
     public int getCoins() {

@@ -37,6 +37,8 @@ public class CoinManager {
         int oldCoinPool = dropBox.getCoinPool();
         int newCoinPool = oldCoinPool - prize;
         dropBox.setCoinPool(newCoinPool);
+        //System.out.println("OldCoinPool " + oldCoinPool);
+        //System.out.println("Prize " + prize + " NewCoinPool" + newCoinPool);
 
         return newCoinPool;
     }

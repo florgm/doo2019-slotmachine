@@ -34,7 +34,6 @@ public class Reel {
 
                     for (int k = currentValue; k < symbols.size(); k++) {
                         currentValue = ++currentValue % symbols.size();
-                        //System.out.println(String.valueOf(this.hashCode()) + symbols.get(currentValue));
                         Thread.sleep(200);
                         reelListener.reelUpdate(this);
 
@@ -49,7 +48,7 @@ public class Reel {
         });
     }
 
-    public int getCurrentValue() {
-        return currentValue;
+    public String getCurrentValue() {
+        return symbols.get(currentValue);
     }
 }
