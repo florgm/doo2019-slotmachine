@@ -1,7 +1,5 @@
 package slotmachine.coinrelated;
 
-
-
 public class CoinManager {
     private DropBox dropBox;
     private CoinSlot coinSlot;
@@ -33,16 +31,6 @@ public class CoinManager {
         coinSlot.resetCoinSlot();
     }
 
-    public int updateCoinPool(int prize) {
-        int oldCoinPool = dropBox.getCoinPool();
-        int newCoinPool = oldCoinPool - prize;
-        dropBox.setCoinPool(newCoinPool);
-        //System.out.println("OldCoinPool " + oldCoinPool);
-        //System.out.println("Prize " + prize + " NewCoinPool" + newCoinPool);
-
-        return newCoinPool;
-    }
-
     public void setPrize(int prize) {
         this.prize = prize;
     }
@@ -59,9 +47,9 @@ public class CoinManager {
         bet = 0;
     }
 
-    public void resetPrize() {
-        prize = 0;
-    }
+    public void resetPrize() { prize = 0; }
+
+    public int getCoinPool() { return dropBox.getCoinPool(); }
 
     public int deliverPrize(int coins) throws CoinException {
         if(coins > dropBox.getCoinPool()) {

@@ -28,7 +28,6 @@ public class SlotMachine implements IReelManagerListener {
     private IReelHandler reelHandler;
 
     private int coinPool;
-    private int prize;
     private String gameMode;
 
     private SlotMachine() { }
@@ -113,8 +112,7 @@ public class SlotMachine implements IReelManagerListener {
     }
 
     public void onReelsFinished() {
-        prize = coinManager.getPrize();
-        //System.out.println("Prize en reels finished " + prize);
+        int prize = coinManager.getPrize();
 
         try {
             iPrizeHandler.retrieve(coinManager.deliverPrize(prize));
@@ -130,10 +128,7 @@ public class SlotMachine implements IReelManagerListener {
             showMessage("Thank you for playing");
         }
 
-        //int newCoinPool = coinManager.updateCoinPool(prize);
-        settingListener.updateCoinPool();
-        //settings.setCoinPool(newCoinPool);
-        //settings.saveSettings();
+        settingListener.updateCoinPool(coinManager.getCoinPool());
         coinManager.resetBet();
         coinManager.resetPrize();
         SlotMachineViewFacade.setInputEnabled(true);
@@ -144,34 +139,18 @@ public class SlotMachine implements IReelManagerListener {
         reelHandler.update();
     }
 
-    public int getNewCoinPool() {
-        int newCoinPool = coinManager.updateCoinPool(prize);
-
-        return newCoinPool;
-    }
-
     public void setGameMode(String gameMode) {
         gameContext.setMode(gameMode);
-        settingListener.updateGameMode();
-        //settings.setGameMode(gameMode);
-        //settings.saveSettings();
+        settingListener.updateGameMode(gameContext.getGameModeKey());
     }
 
-    public String getGameMode() {
-        return gameContext.getGameModeKey();
-    }
-
-    public void reset() {
+    public void reset(int coinPool, String gameMode) {
+        settingListener.resetSettings();
         iPrizeHandler.reset();
         coinManager.loadCoins(coinPool);
-        gameContext.setMode("RANDOM");
-        settingListener.updateGameMode();
-        //settings.setGameMode("RANDOM");
-        //settings.saveSettings();
+        gameContext.setMode(gameMode);
         showMessage("Insert Coins");
     }
 
-    public void printRecords() {
-        RecordManager.getInstance().getRecords();
-    }
+    public void printRecords() { RecordManager.getInstance().getRecords(); }
 }

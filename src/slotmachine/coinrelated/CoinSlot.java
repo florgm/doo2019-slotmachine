@@ -7,10 +7,7 @@ public class CoinSlot {
         resetCoinSlot();
     }
 
-    public void insertCoin(int coin) {
-        coins += coin;
-        //System.out.println(coins);
-    }
+    public void insertCoin(int coin) { coins += coin; }
 
     public int getCoins() {
         return coins;
