@@ -11,11 +11,10 @@ public class GameContext implements Mode {
     private Mode mode;
     private String gameModeKey;
     private List<Integer> reelSizes;
+    private IRandomize randomize;
 
-    //TODO ver de hacer un enum
-    public enum GameMode {
-        RANDOM,
-        SEQUENCE
+    public GameContext() {
+        this.randomize = new Randomize();
     }
 
     public void setReelSizes(List<Integer> reelSizes) {
@@ -23,24 +22,12 @@ public class GameContext implements Mode {
     }
 
     public void setMode(String gameMode) {
-        IRandomize randomize = new Randomize();
-
         this.gameModeKey = gameMode;
 
-        if(gameMode.equals("Random")) {
+        if(gameMode.equals("RANDOM")) {
             this.mode = GameModeFactory.getGameMode(new RandomFactory(reelSizes,randomize));
         } else {
             this.mode = GameModeFactory.getGameMode(new SequenceFactory(reelSizes,20,randomize));
-        }
-    }
-
-    public String changeMode() {
-        if(gameModeKey.equals("Random")) {
-            this.setMode("Sequence");
-            return "Random";
-        } else {
-            this.setMode("Random");
-            return "Sequence";
         }
     }
 

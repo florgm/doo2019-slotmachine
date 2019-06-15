@@ -7,9 +7,7 @@ public class CoinSlot {
         resetCoinSlot();
     }
 
-    public void insertCoin(int coin) {
-        coins += coin;
-    }
+    public void insertCoin(int coin) { coins += coin; }
 
     public int getCoins() {
         return coins;

@@ -11,9 +11,7 @@ public class DropBox {
         return coinPool;
     }
 
-    public void addToCoinPool(int bet) {
-        this.coinPool += bet;
-    }
+    public void addToCoinPool(int bet) { this.coinPool += bet; }
 
     public int withdrawCoins(int prize) {
         this.coinPool -= prize;
